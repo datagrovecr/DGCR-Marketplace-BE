@@ -7,21 +7,21 @@ CREATE TABLE Clients (
 );
 
 CREATE TABLE Directions (
-  ID_Direccion SERIAL PRIMARY KEY,
-  ID_Cliente INTEGER REFERENCES Clients(ID_Client),
-  Direccion VARCHAR(100) NOT NULL,
-  Provincia VARCHAR(50) NOT NULL,
+  ID_Direction SERIAL PRIMARY KEY,
+  ID_Client INTEGER REFERENCES Clients(ID_Client),
+  Direction VARCHAR(100) NOT NULL,
+  Province VARCHAR(50) NOT NULL,
   Canton VARCHAR(50) NOT NULL,
-  Distrito VARCHAR(50) NOT NULL,
-  Codigo_Postal VARCHAR(10) NOT NULL
+  District VARCHAR(50) NOT NULL,
+  Zip_Code VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE Payment_Method (
-  ID_Metodo_Pago SERIAL PRIMARY KEY,
-  ID_Cliente INTEGER REFERENCES Clients(ID_Client),
-  Tipo VARCHAR(50) NOT NULL,
-  Numero VARCHAR(50) NOT NULL,
-  Fecha_Vencimiento DATE NOT NULL,
+  ID_Payment_Method SERIAL PRIMARY KEY,
+  ID_Client INTEGER REFERENCES Clients(ID_Client),
+  Type VARCHAR(50) NOT NULL,
+  Number VARCHAR(50) NOT NULL,
+  Expire DATE NOT NULL,
   CVV VARCHAR(10) NOT NULL
 );
 
