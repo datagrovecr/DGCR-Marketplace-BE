@@ -1,137 +1,146 @@
-CREATE TABLE Clients (
-  ID_Client SERIAL PRIMARY KEY,
-  Name VARCHAR(50) NOT NULL,
-  LastName VARCHAR(50) NOT NULL,
-  Email VARCHAR(100) NOT NULL,
-  Phone VARCHAR(12) NOT NULL
+CREATE TABLE clients (
+  id_client SERIAL PRIMARY KEY,
+  passport VARCHAR(15),
+  id_card VARCHAR(15),
+  name VARCHAR(50) NOT NULL,
+  lastname VARCHAR(50) NOT NULL,
+  country VARCHAR(20) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  phone INTEGER NOT NULL,
+  dimex VARCHAR(15)
 );
 
-CREATE TABLE Directions (
-  ID_Direction SERIAL PRIMARY KEY,
-  ID_Client INTEGER REFERENCES Clients(ID_Client),
-  Direction VARCHAR(100) NOT NULL,
-  Province VARCHAR(50) NOT NULL,
-  Canton VARCHAR(50) NOT NULL,
-  District VARCHAR(50) NOT NULL,
-  Zip_Code VARCHAR(10) NOT NULL
+CREATE TABLE client_directions (
+  id_direction SERIAL PRIMARY KEY,
+  id_client INTEGER REFERENCES clients(id_client),
+  direction VARCHAR(300) NOT NULL,
+  province VARCHAR(50) NOT NULL,
+  canton VARCHAR(50) NOT NULL,
+  district VARCHAR(50) NOT NULL,
+  zip_code VARCHAR(12) NOT NULL
 );
 
-CREATE TABLE Payment_Method (
-  ID_Payment_Method SERIAL PRIMARY KEY,
-  ID_Client INTEGER REFERENCES Clients(ID_Client),
-  Type VARCHAR(50) NOT NULL,
-  Number VARCHAR(50) NOT NULL,
-  Expire DATE NOT NULL,
-  CVV VARCHAR(10) NOT NULL
+CREATE TABLE payment_method (
+  id_payment_method SERIAL PRIMARY KEY,
+  id_client INTEGER REFERENCES clients(id_client),
+  name VARCHAR(60) NOT NULL,
+  number VARCHAR(16) NOT NULL,
+  expire DATE NOT NULL,
+  cvv VARCHAR(3) NOT NULL
 );
 
-CREATE TABLE Reviews (
-  ID_Reviews SERIAL PRIMARY KEY,
-  ID_Client INTEGER REFERENCES Clients(ID_Client),
-  ID_Service INTEGER REFERENCES Service(ID_Service),
-  Valuation INTEGER NOT NULL,
-  Comment TEXT,
-  Date DATE
+CREATE TABLE reviews (
+  id_reviews SERIAL PRIMARY KEY,
+  id_client INTEGER REFERENCES clients(id_client),
+  id_service INTEGER REFERENCES services(id_service),
+  valuation INTEGER NOT NULL,
+  comment TEXT NOT NULL,
+  date DATE NOT NULL
 );
 
-CREATE TABLE Order (
-  ID_Order SERIAL PRIMARY KEY,
-  ID_Client INTEGER REFERENCES Clients(ID_Client),
-  Order_Date DATE NOT NULL,
-  Status BOOL NOT NULL
+CREATE TABLE orders (
+  id_order SERIAL PRIMARY KEY,
+  id_client INTEGER REFERENCES clients(id_client),
+  order_date DATE NOT NULL,
+  status BOOL NOT NULL
 );
 
-CREATE TABLE Bill (
-  ID_Bill SERIAL PRIMARY KEY,
-  ID_Client INTEGER REFERENCES Clients(ID_Client),
-  ID_Order INTEGER REFERENCES Order(ID_Order),
-  Date DATE,
-  Subtotal DECIMAL(10, 2),
-  Total DECIMAL(10, 2)
+CREATE TABLE bill (
+  id_bill SERIAL PRIMARY KEY,
+  id_client INTEGER REFERENCES clients(id_client),
+  id_order INTEGER REFERENCES orders(id_order),
+  date DATE,
+  subtotal DECIMAL(10, 2),
+  total DECIMAL(10, 2)
 );
 
-CREATE TABLE Bill_Service (
-  ID_Service INTEGER REFERENCES Service(ID_Service),
-  ID_Bill INTEGER REFERENCES Bill(ID_Bill),
-  Quantity INTEGER,
-  Cost DECIMAL(10, 2),
-  PRIMARY KEY (ID_Service, ID_Bill)
+CREATE TABLE bill_service (
+  id_service INTEGER REFERENCES services(id_service),
+  id_bill INTEGER REFERENCES bill(id_bill),
+  quantity INTEGER,
+  cost DECIMAL(10, 2),
+  PRIMARY KEY (id_service, id_bill)
 );
 
-CREATE TABLE Services (
-  ID_Service SERIAL PRIMARY KEY,
-  Name VARCHAR(50) NOT NULL,
-  Description TEXT,
-  Cost DECIMAL(10, 2) NOT NULL
+CREATE TABLE services (
+  id_service SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  cost_notes TEXT,
+  cost DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE Category_Services (
-  ID_Service INTEGER REFERENCES Service(ID_Service),
-  ID_Category INTEGER REFERENCES Category(ID_Category),
-  PRIMARY KEY(ID_Service, ID_Category)
+CREATE TABLE category_services (
+  id_service INTEGER REFERENCES services(id_service),
+  id_Category INTEGER REFERENCES category(id_category),
+  PRIMARY KEY(id_service, id_category)
 );
 
-CREATE TABLE Category (
-  ID_Category SERIAL PRIMARY KEY,
-  Name VARCHAR(50) NOT NULL,
-  Description TEXT
+CREATE TABLE category (
+  id_category SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT
 );
 
-CREATE TABLE Label_Services (
-  ID_Service INTEGER REFERENCES Service(ID_Service),
-  ID_Label INTEGER REFERENCES Label(ID_Label),
-  PRIMARY KEY(ID_Servicio, ID_Etiqueta)
+CREATE TABLE label_services (
+  id_service INTEGER REFERENCES services(id_service),
+  id_label INTEGER REFERENCES label(id_label),
+  PRIMARY KEY(id_service, id_label)
 );
 
-CREATE TABLE Label (
-  ID_Label SERIAL PRIMARY KEY,
-  Name VARCHAR(50) NOT NULL,
-  Description TEXT
+CREATE TABLE label (
+  id_label SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT
 );
 
-CREATE TABLE Worker_Service (
-  ID_Service INTEGER REFERENCES Service(ID_Service),
-  ID_Worker INTEGER REFERENCES Workers(ID_Worker),
-  PRIMARY KEY(ID_Service, ID_Worker)
+CREATE TABLE worker_services (
+  id_service INTEGER REFERENCES service(id_service),
+  id_worker INTEGER REFERENCES workers(id_worker),
+  PRIMARY KEY(id_service, id_worker)
 );
 
-CREATE TABLE Workers (
-  ID_Worker SERIAL PRIMARY KEY,
-  Name VARCHAR(50) NOT NULL,
-  LastName VARCHAR(50) NOT NULL,
-  Email VARCHAR(100) NOT NULL,
-  Phone VARCHAR(12) NOT NULL,
-  Professional_Profile TEXT,
-  Valuation INTEGER,
-  Province VARCHAR(50),
-  Canton VARCHAR(50),
-  District VARCHAR(50),
-  Zip_Code VARCHAR(10),
-  Active BOOL
+CREATE TABLE workers (
+  id_worker SERIAL PRIMARY KEY,
+  name VARCHAR(25) NOT NULL,
+  lastname VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  phone VARCHAR(16) NOT NULL,
+  passport VARCHAR(15),
+  id_card VARCHAR(15),
+  dimex VARCHAR(15),
+  country VARCHAR(30),
+  professional_profile TEXT NOT NULL,
+  valuation INTEGER,
+  province VARCHAR(50) NOT NULL,
+  canton VARCHAR(40) NOT NULL,
+  district VARCHAR(40),
+  zip_code VARCHAR(10),
+  active BOOL NOT NULL
 );
 
-CREATE TABLE Vacations (
-  ID_Vacations SERIAL PRIMARY KEY,
-  ID_Worker INTEGER REFERENCES Trabajadores(ID_Trabajador),
-  Start_Date DATE NOT NULL,
-  Finish_Date DATE NOT NULL
+CREATE TABLE vacations (
+  id_vacations SERIAL PRIMARY KEY,
+  id_worker INTEGER REFERENCES workers(id_worker),
+  start_date DATE NOT NULL,
+  finish_date DATE NOT NULL
 );
 
-CREATE TABLE Schedule (
-  ID_Schedule SERIAL PRIMARY KEY,
-  ID_Service INTEGER REFERENCES Service(ID_Service),
-  ID_Worker INTEGER REFERENCES Workers(ID_Worker),
-  Week VARCHAR(20) NOT NULL,
-  Start_Hour TIME NOT NULL,
-  Finish_Hour TIME NOT NULL
+CREATE TABLE schedule (
+  id_schedule SERIAL PRIMARY KEY,
+  id_service INTEGER REFERENCES services(id_service),
+  id_worker INTEGER REFERENCES workers(id_worker),
+  week_day VARCHAR(2) NOT NULL,
+  start_hour TIME NOT NULL,
+  finish_hour TIME NOT NULL
 );
 
-CREATE TABLE Directions_Worker (
-  ID_Direction SERIAL PRIMARY KEY,
-  ID_Worker INTEGER REFERENCES Trabajadores(ID_Trabajador),
-  Direction VARCHAR(100) NOT NULL,
-  Province VARCHAR(50) NOT NULL,
-  Canton VARCHAR(50) NOT NULL,
-  District VARCHAR(50) NOT NULL,
-  Zip_Code VARCHAR(10) NOT NULL
+CREATE TABLE directions_worker (
+  id_direction SERIAL PRIMARY KEY,
+  id_worker INTEGER REFERENCES workers(id_worker),
+  direction TEXT NOT NULL,
+  province VARCHAR(40) NOT NULL,
+  canton VARCHAR(40) NOT NULL,
+  district VARCHAR(40) NOT NULL,
+  zip_code VARCHAR(10) NOT NULL
 );
